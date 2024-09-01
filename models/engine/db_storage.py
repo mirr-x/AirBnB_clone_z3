@@ -36,7 +36,7 @@ class DBStorage():
             for obj in objects:
                 key = "{}.{}".format(type(obj).__name__, obj.id)
                 new_dict[key] = obj
-        else:
+        elif cls is None:
             classes = [User, State, City, Amenity, Place, Review]
             for c in classes:
                 objects = self.__session.query(c).all()
@@ -68,4 +68,22 @@ class DBStorage():
     def close(self):
         """Call remove() method on the private session attribute."""
         self.__session.close()
-
+    
+    def get(self, cls, id):
+        """Retrieve an object from the current database session."""
+        key = "{}.{}".format(cls().__class__.__name__, id)
+        if cls is not None and id is not None:
+            objects = self.all(cls)
+            for obj in objects.keys():
+                if obj == key:
+                    return objects[obj]
+        return None
+    
+    def count(self, cls=None):
+        """Count the number of objects in the current database session."""
+        if cls is not None:
+            objects = self.all(cls)
+            return len(objects)
+        else:
+            objects = self.all()
+            return len(objects)
