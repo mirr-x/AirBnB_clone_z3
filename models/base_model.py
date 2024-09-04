@@ -52,19 +52,23 @@ class BaseModel():
 
     # tODO '''TO_DICT method'''
 
-    def to_dict(self):
-        """returns a dictionary containing all keys/values of the instance"""
-        time = "%Y-%m-%dT%H:%M:%S.%f"
+    def to_dict(self, include_password=False):
+        my_dict_z = {}
+        lk = self.__dict__.copy()
 
-        new_dict = self.__dict__.copy()
-        if "created_at" in new_dict:
-            new_dict["created_at"] = new_dict["created_at"].strftime(time)
-        if "updated_at" in new_dict:
-            new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
-        new_dict["__class__"] = self.__class__.__name__
-        if "_sa_instance_state" in new_dict:
-            del new_dict["_sa_instance_state"]
-        return new_dict
+        for k, v in lk.items():
+            if k == "_sa_instance_state":
+                continue
+            elif k == "updated_at" or k == "created_at":
+                my_dict_z[k] = v.isoformat()
+            else:
+                my_dict_z[k] = v
+        
+        if include_password == False and 'password' in my_dict_z:
+            del my_dict_z['password']
+
+        my_dict_z["__class__"] = self.__class__.__name__
+        return my_dict_z
 
     # tODO ''' __STR__ method return string when print the object '''
 
