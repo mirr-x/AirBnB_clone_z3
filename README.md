@@ -1,4 +1,4 @@
-# AirBnB_clone_v3: RESTful API
+# AirBnB clone_v3: RESTful API
 
 ## Table of Contents
 - [Description](#description)
